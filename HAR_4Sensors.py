@@ -9,6 +9,7 @@ from pandas.plotting import scatter_matrix
 
 import pandas
 import matplotlib.pyplot as plt
+import numpy as np
 
 # reading 'Human Activity Recognition' dataset.
 dataset_columns = ['x1','y1','z1','x2','y2','z2','x3','y3','z3','x4','y4','z4','class']
@@ -22,6 +23,17 @@ testdata_size = 0.20
 fix_split = 7
 X_trainingdataset,X_testdataset,Y_trainingdataset,Y_testdataset = model_selection.train_test_split(X,Y,test_size=testdata_size,
                                                                                                               random_state=fix_split )
+
+# raw data graph
+counts = har_dataset['class'].value_counts()
+plt.bar(range(len(counts)),counts)
+plt.title('Distribution of activities')
+plt.ylabel('Frequency')
+plt.xlabel('Activites')
+activity = counts.keys()
+x_pos = np.arange(len(activity))
+plt.xticks(x_pos,activity)
+plt.show()
 
 # Algorithms
 algorithms = []
@@ -38,7 +50,7 @@ for name,algorithm in algorithms:
     crossfold_dataset_results = model_selection.cross_val_score(algorithm,X_trainingdataset,Y_trainingdataset,cv=crossfold_dataset,scoring=accuracy)
     algorithm_results.append(crossfold_dataset_results)
     names.append(name)
-    algorithm_accuracy = "%s: %f (%f)" % (name, crossfold_dataset_results.mean(),crossfold_dataset_results.std())
+    algorithm_accuracy = "%s: %f (%f)" % (name, crossfold_dataset_results.mean()*100,crossfold_dataset_results.std())
     print(algorithm_accuracy)
 
 # Graph for algorithm comparison
@@ -46,6 +58,8 @@ algo_graph = plt.figure()
 algo_graph.suptitle('Algorithm Comparison')
 subplot = algo_graph.add_subplot(111)
 plt.boxplot(algorithm_results)
+plt.ylabel('Accuracy')
+plt.xlabel('Algorithums')
 subplot.set_xticklabels(names)
 plt.show()
 
@@ -53,5 +67,7 @@ plt.show()
 kNeighbourClassifier = KNeighborsClassifier()
 kNeighbourClassifier.fit(X_trainingdataset,Y_trainingdataset)
 predictions = kNeighbourClassifier.predict(X_testdataset)
-print(accuracy_score(Y_testdataset,predictions))
+print('\n')
+print('Prediction Accuracy:',accuracy_score(Y_testdataset,predictions)*100,'%')
+print('\n')
 print(classification_report(Y_testdataset,predictions))
