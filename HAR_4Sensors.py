@@ -1,3 +1,11 @@
+##############################################################################################################
+# Filename    : HAR_4Sensors.py                                                                              #
+# Description : This script is used for reading the recorded data of human activities from the dataset and   #
+#               then further use it for data analysis. The data is from 4 sensors. The dataset is divided    #
+#               into training and testing dataset. The training dataset is used for training the model and   #
+#               testing dataset is used for predictions.                                                     #
+##############################################################################################################
+
 # importing required liabraries for machine learning algorithums
 from sklearn import model_selection
 from sklearn.metrics import classification_report
@@ -5,7 +13,6 @@ from sklearn.metrics import  accuracy_score
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble.forest import RandomForestClassifier
-from pandas.plotting import scatter_matrix
 
 import pandas
 import matplotlib.pyplot as plt
@@ -35,7 +42,7 @@ x_pos = np.arange(len(activity))
 plt.xticks(x_pos,activity)
 plt.show()
 
-# Algorithms
+# Algorithms to be used
 algorithms = []
 algorithms.append(('KNN',KNeighborsClassifier()))
 algorithms.append(('CART',DecisionTreeClassifier()))
@@ -45,6 +52,9 @@ algorithms.append(('RF',RandomForestClassifier()))
 algorithm_results = []
 names = []
 accuracy = 'accuracy'
+print('\n')
+print('Algorithm accuracy using 4 sensors :')
+print('\n')
 for name,algorithm in algorithms:
     crossfold_dataset = model_selection.KFold(n_splits=10,random_state=fix_split)
     crossfold_dataset_results = model_selection.cross_val_score(algorithm,X_trainingdataset,Y_trainingdataset,cv=crossfold_dataset,scoring=accuracy)
